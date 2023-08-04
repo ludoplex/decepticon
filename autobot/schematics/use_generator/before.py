@@ -2,7 +2,5 @@
 
 
 def compute_squares(n: int) -> list[int]:
-    squares: list[int] = []
-    for i in range(n):
-        squares.append(i * i)
+    squares: list[int] = [i * i for i in range(n)]
     return squares

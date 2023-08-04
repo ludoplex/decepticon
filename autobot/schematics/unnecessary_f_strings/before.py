@@ -2,7 +2,7 @@
 
 
 def func() -> None:
-    a = f"world"
+    a = "world"
     b = f"Hello, {a}!"
-    c = f"Hello world"
-    d = f"Hello" + f", " + f"{a}!"
+    c = "Hello world"
+    d = f"Hello, " + f"{a}!"

@@ -65,6 +65,7 @@ def run_refactor(
     console.print("[bold]1. Extracting AST nodes...")
     filename_to_snippets: dict[str, list[Snippet]] = {}
     all_snippet_texts: set[str] = set()
+    max_snippet_len = 1600
     for filename in targets:
         with open(filename, "r") as fp:
             source_code = fp.read()
@@ -73,7 +74,6 @@ def run_refactor(
         for snippet in iter_snippets(
             source_code, schematic.transform_type.ast_node_type()
         ):
-            max_snippet_len = 1600
             if len(snippet.text) > max_snippet_len:
                 logging.warning(
                     f"Snippet at {filename}:{snippet.lineno} is too long "

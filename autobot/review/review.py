@@ -26,10 +26,11 @@ class Resolution(enum.Enum):
 def run_review() -> None:
     patch_files: list[str] = []
     for root, _, filenames in os.walk(patches.PATCH_DIR):
-        for filename in filenames:
-            if filename.endswith(".patch"):
-                patch_files.append(os.path.join(root, filename))
-
+        patch_files.extend(
+            os.path.join(root, filename)
+            for filename in filenames
+            if filename.endswith(".patch")
+        )
     console = Console()
 
     patches_by_resolution: dict[Resolution, list[str]] = {
@@ -80,10 +81,7 @@ def run_review() -> None:
                 elif resolution == Resolution.REJECT:
                     # Reject the patch.
                     os.remove(patch_file)
-                elif resolution == Resolution.SKIP:
-                    # Do nothing.
-                    pass
-                else:
+                elif resolution != Resolution.SKIP:
                     raise ValueError(f"Unexpected resolution: {resolution}")
 
     if num_patches > 0:
@@ -91,8 +89,8 @@ def run_review() -> None:
             console.print(f"[bold]Done![/] Reviewed {len(patch_files)} patch.")
         else:
             console.print(f"[bold]Done![/] Reviewed {len(patch_files)} patches.")
-        for resolution in patches_by_resolution:
-            if patches_by_resolution[resolution]:
+        for resolution, value in patches_by_resolution.items():
+            if value:
                 if resolution == Resolution.ACCEPT:
                     console.print("[green]Accepted:")
                 elif resolution == Resolution.REJECT:

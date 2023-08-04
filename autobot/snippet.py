@@ -49,16 +49,12 @@ def recontextualize(snippet: Snippet, source_code: str) -> list[str]:
     """
     lines: list[str] = []
 
-    # Prepend any lines of the originating source code that precede the snippet.
-    source_lines = source_code.splitlines()
     if snippet.lineno > 1:
-        for i in range(snippet.lineno - 1):
-            lines.append(source_lines[i])
-
+        # Prepend any lines of the originating source code that precede the snippet.
+        source_lines = source_code.splitlines()
+        lines.extend(source_lines[i] for i in range(snippet.lineno - 1))
     # Tack on the snippet itself, with indentation re-applied.
-    for line in snippet.text.splitlines():
-        lines.append(snippet.padding + line)
-
+    lines.extend(snippet.padding + line for line in snippet.text.splitlines())
     return lines
 
 
